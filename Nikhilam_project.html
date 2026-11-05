@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Library Management System</title>
+<style>
+:root{--blue:#dff5f7;--blue2:#b9e7eb;--teal:#167b83;--green:#168b46;--ink:#16343a;--muted:#668087;--line:#9dcbd0;--white:#fff}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#e9f8f8,#f7fcfc);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+header{background:linear-gradient(110deg,#d9f3f5,#a8dfe4);border-bottom:5px solid #77bfc6;padding:24px 5%;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.brand{font-size:clamp(24px,4vw,42px);font-weight:800;color:#147b36;letter-spacing:1px;text-transform:uppercase;text-shadow:1px 2px #fff}
+.tag{color:#38676d;font-size:13px;margin-top:5px}
+.badge{background:#fff9;padding:9px 13px;border:1px solid #8dc7cd;border-radius:20px;font-size:12px;color:#28636a}
+main{max-width:1300px;margin:24px auto;padding:0 18px}
+.grid{display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:18px}
+.panel{background:#e5f6f7;border:5px solid #8dcbd0;border-radius:13px;padding:20px;box-shadow:0 7px 22px #164c5515}
+h2{margin:0 0 17px;color:#147b36;font-size:21px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}
+label{font-size:12px;font-weight:700;color:#28545b}
+input,select{width:100%;padding:11px 10px;border:1px solid #9ccbd0;border-radius:5px;background:#fff;font-size:14px;color:#193b40;outline:none}
+input:focus,select:focus{border-color:#218b93;box-shadow:0 0 0 3px #218b9320}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:17px}
+button{border:0;border-radius:6px;padding:11px 12px;font-weight:700;cursor:pointer;transition:.15s}
+button:hover{filter:brightness(.94);transform:translateY(-1px)}
+.primary{background:#167b83;color:#fff}.secondary{background:#d0e9eb;color:#194d53;border:1px solid #9bcbd0}.danger{background:#b64242;color:white}
+.book-layout{display:grid;grid-template-columns: minmax(145px,.8fr) 1.2fr;gap:12px;min-height:340px}
+.book-list{background:#fff;border:1px solid #a6d0d4;border-radius:6px;overflow:auto;max-height:340px}
+.book-item{padding:10px;border-bottom:1px solid #e3eff0;cursor:pointer;font-size:13px}.book-item:hover,.book-item.active{background:#d9f2f3}.book-item b{display:block;color:#176d75;margin-bottom:3px}
+.book-preview{background:#fff;border:1px solid #a6d0d4;border-radius:6px;padding:14px;min-height:200px}
+.book-preview h3{margin:0 0 8px;color:#167b83}.book-preview p{font-size:13px;line-height:1.5;color:#4d6c71}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.stat{background:#fff;border:1px solid #c5e1e3;border-radius:9px;padding:12px}.stat strong{font-size:23px;color:#167b83;display:block}.stat span{font-size:11px;color:#668087}
+.table-panel{margin-top:18px}.table-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.table-head h2{margin:0}.search{max-width:280px}
+.table-wrap{overflow-x:auto;background:#fff;border:1px solid #b6d9dc;border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13px}th,td{padding:12px 10px;border-bottom:1px solid #e6eff0;text-align:left}th{background:#d9f1f3;color:#24555b}tr:hover td{background:#f7fcfc}
+.pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#e1f5e8;color:#1b7540;font-size:11px;font-weight:700}
+.empty{text-align:center;padding:28px;color:#799399}
+footer{text-align:center;color:#779095;font-size:12px;padding:25px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.book-layout{grid-template-columns:1fr}.book-list{max-height:180px}.form-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.actions{grid-template-columns:1fr 1fr 1fr}main{padding:0 10px}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+ <div><div class="brand">Online Library Management System</div><div class="tag">A simple student library record management project</div></div>
+ <div class="badge">Python project concept • Browser demo</div>
+</header>
+<main>
+<div class="grid">
+<section class="panel">
+<h2>Library Membership Information</h2>
+<form id="libraryForm">
+<div class="form-grid">
+<div class="field"><label for="memberType">Member Type</label><select id="memberType"><option>Student</option><option>Faculty</option><option>Staff</option></select></div>
+<div class="field"><label for="prn">PRN No.</label><input id="prn" placeholder="Enter PRN / Member ID"></div>
+<div class="field"><label for="firstName">First Name</label><input id="firstName" placeholder="First name" required></div>
+<div class="field"><label for="lastName">Last Name</label><input id="lastName" placeholder="Last name"></div>
+<div class="field"><label for="gender">Gender</label><select id="gender"><option>Prefer not to say</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+<div class="field"><label for="bookId">Book ID</label><input id="bookId" placeholder="e.g. BK-101"></div>
+<div class="field"><label for="phone">Phone</label><input id="phone" type="tel" placeholder="Phone number"></div>
+<div class="field"><label for="bookTitle">Book Title</label><input id="bookTitle" placeholder="Book title"></div>
+<div class="field"><label for="email">E-mail</label><input id="email" type="email" placeholder="name@example.com"></div>
+<div class="field"><label for="author">Author Name</label><input id="author" placeholder="Author name"></div>
+<div class="field"><label for="address">Address</label><input id="address" placeholder="City / address"></div>
+<div class="field"><label for="borrowDate">Date Borrowed</label><input id="borrowDate" type="date"></div>
+<div class="field"><label for="pin">Pin Code</label><input id="pin" inputmode="numeric" placeholder="PIN code"></div>
+<div class="field"><label for="dueDate">Due Date</label><input id="dueDate" type="date"></div>
+<div class="field"><label for="daysHeld">Days Held</label><input id="daysHeld" type="number" min="0" placeholder="0"></div>
+<div class="field"><label for="lateFee">Late Fee</label><input id="lateFee" type="number" min="0" step="0.01" placeholder="0.00"></div>
+<div class="field"><label for="overdue">Overdue Since</label><input id="overdue" type="date"></div>
+<div class="field"><label for="price">Book Price (₹)</label><input id="price" type="number" min="0" step="0.01" placeholder="0.00"></div>
+</div>
+<div class="actions">
+<button class="primary" type="submit">Add Data</button>
+<button class="secondary" type="button" id="updateBtn">Update</button>
+<button class="danger" type="button" id="deleteBtn">Delete</button>
+</div>
+<div class="actions">
+<button class="secondary" type="button" id="showBtn">Show Data</button>
+<button class="secondary" type="button" id="resetBtn">Reset Form</button>
+<button class="secondary" type="button" id="exitBtn">Clear All</button>
+</div>
+</form>
+</section>
+<section class="panel">
+<h2>Book Details</h2>
+<div class="book-layout">
+<div class="book-list" id="bookList">
+ <div class="book-item active" data-title="Head First Python" data-author="Paul Barry"><b>Head First Python</b>Paul Barry</div>
+ <div class="book-item" data-title="Learn Python the Hard Way" data-author="Zed Shaw"><b>Learn Python the Hard Way</b>Zed Shaw</div>
+ <div class="book-item" data-title="Python Crash Course" data-author="Eric Matthes"><b>Python Crash Course</b>Eric Matthes</div>
+ <div class="book-item" data-title="Automate the Boring Stuff with Python" data-author="Al Sweigart"><b>Automate the Boring Stuff</b>Al Sweigart</div>
+ <div class="book-item" data-title="Fluent Python" data-author="Luciano Ramalho"><b>Fluent Python</b>Luciano Ramalho</div>
+ <div class="book-item" data-title="Effective Python" data-author="Brett Slatkin"><b>Effective Python</b>Brett Slatkin</div>
+ <div class="book-item" data-title="Think Python" data-author="Allen B. Downey"><b>Think Python</b>Allen B. Downey</div>
+ <div class="book-item" data-title="Introduction to Machine Learning" data-author="Ethem Alpaydin"><b>Introduction to Machine Learning</b>Ethem Alpaydin</div>
+ <div class="book-item" data-title="Data Science from Scratch" data-author="Joel Grus"><b>Data Science from Scratch</b>Joel Grus</div>
+ <div class="book-item" data-title="Deep Learning with Python" data-author="François Chollet"><b>Deep Learning with Python</b>François Chollet</div>
+</div>
+<div class="book-preview" id="bookPreview"><h3>Head First Python</h3><p><b>Author:</b> Paul Barry</p><p>Select a book from the list to view its details, then use the title and author fields in the form if you want to add a borrowing record.</p><span class="pill">Available in demo catalogue</span></div>
+</div>
+<div class="stats">
+<div class="stat"><strong id="totalRecords">0</strong><span>Borrowing records</span></div>
+<div class="stat"><strong id="activeRecords">0</strong><span>Active records</span></div>
+<div class="stat"><strong id="lateRecords">0</strong><span>Overdue records</span></div>
+</div>
+<p style="font-size:12px;color:#668087;line-height:1.5;margin-bottom:0">Demo note: records are stored in this browser using local storage. This is a front-end academic demo, not a connected multi-user library database.</p>
+</section>
+</div>
+<section class="panel table-panel" id="recordsSection">
+<div class="table-head"><h2>Library Records</h2><input class="search" id="search" placeholder="Search by name, PRN, or book title"></div>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>PRN</th><th>Book</th><th>Borrowed</th><th>Due</th><th>Late Fee</th><th>Status</th></tr></thead><tbody id="recordsBody"><tr><td colspan="7" class="empty">No records yet. Add a member and book to get started.</td></tr></tbody></table></div>
+</section>
+</main>
+<footer>Online Library Management System • Academic project demo</footer>
+<script>
+const $=id=>document.getElementById(id);
+const fields=['memberType','prn','firstName','lastName','gender','bookId','bookTitle','phone','author','email','address','borrowDate','dueDate','daysHeld','lateFee','overdue','pin','price'];
+let records=JSON.parse(localStorage.getItem('libraryRecordsV1')||'[]'), selectedId=null;
+function val(id){return $(id).value.trim()}
+function save(){localStorage.setItem('libraryRecordsV1',JSON.stringify(records));render()}
+function clearForm(){fields.forEach(id=>$(id).value='');$('memberType').value='Student';$('gender').value='Prefer not to say';selectedId=null}
+function getForm(){const r={};fields.forEach(id=>r[id]=val(id));return r}
+function fillForm(r){fields.forEach(id=>$(id).value=r[id]||'');selectedId=r.id}
+function render(){
+ const q=$('search').value.toLowerCase();
+ const filtered=records.filter(r=>[r.firstName,r.lastName,r.prn,r.bookTitle].join(' ').toLowerCase().includes(q));
+ $('recordsBody').innerHTML=filtered.length?filtered.map(r=>{const late=r.dueDate&&r.dueDate<new Date().toISOString().slice(0,10);return `<tr data-id="${r.id}"><td>${esc(r.firstName)} ${esc(r.lastName)}</td><td>${esc(r.prn)}</td><td>${esc(r.bookTitle)}</td><td>${esc(r.borrowDate)}</td><td>${esc(r.dueDate)}</td><td>₹${esc(r.lateFee||'0')}</td><td><span class="pill">${late?'Overdue':'Active'}</span></td></tr>`}).join(''):'<tr><td colspan="7" class="empty">No matching records found.</td></tr>';
+ document.querySelectorAll('#recordsBody tr[data-id]').forEach(tr=>tr.addEventListener('click',()=>{const r=records.find(x=>x.id===tr.dataset.id);if(r)fillForm(r)}));
+ $('totalRecords').textContent=records.length;$('activeRecords').textContent=records.length;
+ $('lateRecords').textContent=records.filter(r=>r.dueDate&&r.dueDate<new Date().toISOString().slice(0,10)).length;
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('libraryForm').addEventListener('submit',e=>{e.preventDefault();if(!val('firstName'))return alert('Please enter the member first name.');const r=getForm();r.id=crypto.randomUUID?crypto.randomUUID():String(Date.now());records.push(r);save();clearForm();alert('Record added successfully.')});
+$('updateBtn').onclick=()=>{if(!selectedId)return alert('Select a record from the table first.');const i=records.findIndex(r=>r.id===selectedId);if(i<0)return;records[i]={...getForm(),id:selectedId};save();alert('Record updated.')};
+$('deleteBtn').onclick=()=>{if(!selectedId)return alert('Select a record from the table first.');if(confirm('Delete the selected record?')){records=records.filter(r=>r.id!==selectedId);save();clearForm()}};
+$('showBtn').onclick=()=>$('recordsSection').scrollIntoView({behavior:'smooth'});
+$('resetBtn').onclick=clearForm;
+$('exitBtn').onclick=()=>{if(confirm('Clear ALL saved library records from this browser?')){records=[];save();clearForm()}};
+$('search').addEventListener('input',render);
+document.querySelectorAll('.book-item').forEach(item=>item.addEventListener('click',()=>{document.querySelectorAll('.book-item').forEach(x=>x.classList.remove('active'));item.classList.add('active');$('bookPreview').innerHTML=`<h3>${esc(item.dataset.title)}</h3><p><b>Author:</b> ${esc(item.dataset.author)}</p><p>Choose this book and enter the member details in the form to create a borrowing record.</p><span class="pill">Catalogue sample</span>`;$('bookTitle').value=item.dataset.title;$('author').value=item.dataset.author}));
+render();
+</script>
+</body></html>
